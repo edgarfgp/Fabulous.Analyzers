@@ -16,21 +16,27 @@
 
     <ItemGroup>
         <PackageReference Include="FSharp.Core" />
+        <PackageReference Include="FsCheck.Xunit" />
+        <PackageReference Include="FsUnit.xUnit" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="NUnit" />
-        <PackageReference Include="NUnit3TestAdapter" />
-        <PackageReference Include="NUnit.Analyzers" />
-        <PackageReference Include="coverlet.collector" />
+        <PackageReference Update="FSharp.Core" />
+        <PackageReference Include="xunit.runner.console" />
+        <PackageReference Include="xunit.runner.visualstudio">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="FSharp.Compiler.Service"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="FSharp.Analyzers.SDK"/>
+        <PackageReference Include="FSharp.Analyzers.SDK.Testing"/>
         <PackageReference Include="Fabulous"/>
         <PackageReference Include="Fabulous.Avalonia" />
-        <PackageReference Include="FSharp.Analyzers.SDK.Testing"/>
-        <PackageReference Update="FSharp.Core"/>
-        <ProjectReference Include="..\Fabulous.Analyzers\Fabulous.Analyzers.fsproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Fabulous.Analyzers\Fabulous.Analyzers.fsproj" />
     </ItemGroup>
 
 </Project>

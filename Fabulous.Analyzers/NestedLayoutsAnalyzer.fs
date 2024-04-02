@@ -1,38 +1,42 @@
-﻿module Fabulous.Analyzers.NestedLayoutsAnalyzer
+﻿namespace Fabulous.Analyzers
 
+open System
 open FSharp.Analyzers.SDK
-open FSharp.Analyzers.SDK.ASTCollecting
-open FSharp.Compiler.Syntax
+open FSharp.Analyzers.SDK.TASTCollecting
 open FSharp.Compiler.Text
 
-[<CliAnalyzer("NestedLayoutsAnalyzer",
-          "Analyzes the code for nested layouts",
-          "")>]
-let nestedLayoutsAnalyzer: Analyzer<CliContext> =
-    fun (ctx: CliContext) ->
-        async {
-            let state = ResizeArray<range>()
+module NestedLayoutsAnalyzer =
 
-            let walker =
-                { new SyntaxCollectorBase() with
-                    override this.WalkBinding(biding: SynBinding) =
-                        ()
+    [<CliAnalyzer("NestedLayoutsAnalyzer",
+              "Analyzes the code for nested layouts",
+              "")>]
+    let nestedLayoutsAnalyzer: Analyzer<CliContext> =
+        fun (ctx: CliContext) ->
+            async {
+                let state = ResizeArray<range>()
 
-                }
-            
-            walkAst walker ctx.ParseFileResults.ParseTree
+                let walker =
+                        { new TypedTreeCollectorBase() with
+                            override _.WalkLet _  _ _ =
+                                ()
+       
+                        }
+                
+                match ctx.TypedTree with
+                | None -> ()
+                | Some typedTree -> walkTast walker typedTree
 
-            return
-                state
-                |> Seq.map (fun r ->
-                    {
-                        Type = "NestedLayoutsAnalyzer"
-                        Message = "Nested layouts are not recommended"
-                        Code = "FA001"
-                        Severity = Warning
-                        Range = r
-                        Fixes = []
-                    }
-                )
-                |> Seq.toList
-    }
+                return
+                    state
+                    |> Seq.map (fun r ->
+                        {
+                            Type = "NestedLayoutsAnalyzer"
+                            Message = "Nested layouts are not recommended"
+                            Code = "FA001"
+                            Severity = Severity.Warning
+                            Range = r
+                            Fixes = []
+                        }
+                    )
+                    |> Seq.toList
+        }
